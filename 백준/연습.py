@@ -1,28 +1,36 @@
-## 백준 1260번
+## 백준 2178번
 import sys
 from collections import deque
 
 input = sys.stdin.readline
 
-def dfs(graph, v, visited):
-    visited[v] = True
-    for i in graph[v]:
-        if not visited[i]:
-            dfs(graph, i, visited)
+n, m = map(int, input().split())
 
-def bfs(graph, start, visited):
-    queue = deque([start])
-    visited[start] = True
-    while queue:
-        v = queue.popleft()
-        for i in graph[v]:
-            if not visited[i]:
-                queue.append(i)
-                visited[i] = True
+graph = []
 
-n, m, v = map(int, input().split())
-graph = [[]]
+for i in range(n):
+    graph.append(list(map(int, input().rstrip())))
 
-for _ in range(m):
-    s, e = map(int, input().split())
-    graph.append([s, e])
+dx = [-1, 1, 0, 0]
+dy = [0, 0, -1, 1]
+
+def bfs(x, y):
+    q = deque()
+    q.append((x, y))
+    while q:
+        x, y = q.popleft()
+        
+        for i in range(4):
+            nx = x + dx[i]
+            ny = y + dy[i]
+            
+            if nx < 0 or nx >= n or ny < 0 or ny >= m:
+                continue
+            if graph[nx][ny] == 0:
+                continue
+            if graph[nx][ny] == 1:
+                graph[nx][ny] = graph[x][y] + 1
+                q.append((nx, ny))
+    return graph[n-1][m-1]
+
+print(bfs(0, 0))

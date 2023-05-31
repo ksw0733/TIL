@@ -1,32 +1,28 @@
-## 백준 7569번
+## 백준 5014번
 import sys
 from collections import deque
 
 input = sys.stdin.readline
 
-m, n, h = map(int, input().split())
+f, s, g, u, d = map(int, input().split())
 
-dx = [0, 0, -1, 1, 0, 0]
-dy = [-1, 1, 0, 0, 0, 0]
-dz = [0, 0, 0, 0, -1, 1]
+building = [0] * (f + 1)
+queue = deque()
 
-visited = [False]*((n*m*h)+1)
+def bfs(s):
+    queue.append(s)
+    building[s] = 1
+    while queue:
+        x = queue.popleft()
+        
+        if x == g:
+            return building[x] -1
+        
+        for move in (x + u, x - d):
+            if 1 <= move <= f and building[move] == 0:
+                building[move] = building[x] + 1
+                queue.append(move)
+                
+    return 'use the stairs'
 
-def dfs(x, y, z):
-    if  x<= -1 or x >= m or y <= -1 or y >= n or z <= -1 or z >= h:
-        return False
-    if graph[x][y][z] == 1:
-        graph[x][y][z] = 1
-        dfs(x-1, y, z)
-        dfs(x+1, y, z)
-        dfs(x, y-1, z)
-        dfs(x, y+1, z)
-        dfs(x, y, z-1)
-        dfs(x, y, z+1)
-        return True
-    return False
-
-graph = []
-for i in range(h):
-    for j in range(n):
-        graph.append(list(map(int, input().split())))
+print(bfs(s))

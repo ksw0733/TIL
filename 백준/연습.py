@@ -1,36 +1,43 @@
-## 백준 9205번
+## 백준 14503번
 import sys
 from collections import deque
 
 input = sys.stdin.readline
 
-
-def bfs():
-    queue = deque()
-    queue.append((home_x, home_y))
-    while queue:
-        x, y = queue.popleft()
-        if abs(x - festival_x) + abs(y - festival_y) <= 1000:
-            print('happy')
-            return
-        for i in range(n):
-            if not visited[i]:
-                nx, ny = graph[i]
-                if abs(x - nx) + abs(y - ny) <= 1000:
-                    visited[i] = 1
-                    queue.append((nx, ny))
-    print('sad')
-    return
-        
-t = int(input())
+def dfs(x, y, v):
+    global res
     
-for _ in range(t):
-    n = int(input())
-    home_x, home_y = map(int, input().split())
-    graph = []
-    for _ in range(n):
-        x, y = map(int, input().split())
-        graph.append((x, y))
-    festival_x, festival_y = map(int, input().split())
-    visited = [0 for _ in range(n+1)]
-    bfs()
+    if graph[x][y] == 0:
+        graph[x][y] = 2
+        res += 1
+        
+    for _ in range(4):
+        nv = (v + 3) % 4
+        nx = x + dx[nv]
+        ny = y + dy[nv]
+        
+        if graph[nx][ny] == 0:
+            dfs(nx, ny, nv)
+            return
+        
+        v = nv
+    
+    nv = (v + 2) % 4
+    nx = x + dx[nv]
+    ny = y + dy[nv]
+    
+    if graph[nx][ny] == 1:
+        return
+    
+    dfs(nx, ny, v)
+    
+
+n, m = map(int, input().split())
+r, c, d = map(int, input().split())
+graph = [list(map(int, input().split())) for _ in range(n)]
+
+dx = [-1, 0, 1, 0]
+dy = [0, 1, 0, -1]
+res = 0
+dfs(r, c, d)
+print(res)

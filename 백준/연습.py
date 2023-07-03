@@ -1,43 +1,20 @@
-## 백준 14503번
 import sys
-from collections import deque
-
 input = sys.stdin.readline
+def solution(n, arr1, arr2):
+    answer = []
+    
+    for i in range(n):
+        tmp = bin(arr1[i] | arr2[i])
+        tmp = tmp[2:]
+        print(tmp)
+        tmp = tmp.replace('1', '#').replace('0', ' ')
+        answer.append(tmp)
+    return answer
 
-def dfs(x, y, v):
-    global res
-    
-    if graph[x][y] == 0:
-        graph[x][y] = 2
-        res += 1
-        
-    for _ in range(4):
-        nv = (v + 3) % 4
-        nx = x + dx[nv]
-        ny = y + dy[nv]
-        
-        if graph[nx][ny] == 0:
-            dfs(nx, ny, nv)
-            return
-        
-        v = nv
-    
-    nv = (v + 2) % 4
-    nx = x + dx[nv]
-    ny = y + dy[nv]
-    
-    if graph[nx][ny] == 1:
-        return
-    
-    dfs(nx, ny, v)
-    
+n = int(input())
+arr1 = list(map(int, input().split()))
+arr2 = list(map(int, input().split()))
 
-n, m = map(int, input().split())
-r, c, d = map(int, input().split())
-graph = [list(map(int, input().split())) for _ in range(n)]
+solution(n, arr1, arr2)
 
-dx = [-1, 0, 1, 0]
-dy = [0, 1, 0, -1]
-res = 0
-dfs(r, c, d)
-print(res)
+print(bin(31)[2:], bin(14)[2:], sep='\n')
